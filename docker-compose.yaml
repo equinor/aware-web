@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+
+  api:
+    image: ysputn-api
+    build: ./api
+  web:
+    image: ysputn-web
+    build: ./web
+  proxy:
+    image: ysputn-proxy
+    build: ./proxy
+    ports:
+      - "80:80"
