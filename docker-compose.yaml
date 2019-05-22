@@ -7,11 +7,16 @@ services:
       - ./test-api/:/src
     ports:
       - 5000:5000
-
-  web:
-    image: aware-web
-    build: .
-    volumes:
-      - ./src/:/code/src
-    ports:
-      - 3000:3000
+    environment:
+        REFRESH_INTERVAL: "15"
+        FLASK_DEBUG: "True"
+        DASHBOARD_HEADER: "Events"
+        PROMETHEUS_API: "http://prometheus-operator-prometheus.monitoring:9090/api/v1/alerts"
+        IGNORE_ALERTS: "TargetDown,DeadMansSwitch,KubeAPIDown,CoreDNSDown,KubeControllerManagerDown,KubeSchedulerDown"
+#  web:
+#    image: aware-web
+#    build: .
+#    volumes:
+#      - ./src/:/code/src
+#    ports:
+#      - 3000:3000

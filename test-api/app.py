@@ -5,6 +5,7 @@ from prometheus import get_prometheus_events
 
 app = Flask(__name__)
 
+
 @app.route('/api/prometheus', methods=['GET'])
 def index():
     prometheus_object = get_prometheus_events()
