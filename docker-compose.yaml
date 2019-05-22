@@ -1,14 +1,17 @@
-version: "3.7"
+version: "3.3"
 services:
-
-  api:
-    image: ysputn-api
-    build: ./api
-  web:
-    image: ysputn-web
-    build: ./web
-  proxy:
-    image: ysputn-proxy
-    build: ./proxy
+  aware:
+    restart: unless-stopped
+    image: sdpequinor/aware:latest
+    volumes:
+      - ./test-api/:/src
     ports:
-      - "80:80"
+      - 5000:5000
+
+  web:
+    image: aware-web
+    build: .
+    volumes:
+      - ./src/:/code/src
+    ports:
+      - 3000:3000
