@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const EventContainerStyled = styled.div`
-  background: ${props => props.background};
+const NoEventsContainer = styled.div`
+  display: flex;
+  height: 100%;
+  align-items: center;
 `;
 
-function getBackgroundColor(severity){
-    switch (severity) {
+function getBackgroundColor(severity) {
+  switch (severity) {
     case 'none':
       return '#00b7bf';
     case 'ok':
@@ -48,10 +50,15 @@ const TD = styled.td`
   text-align: left;
 `;
 
-function EventContainer({ events}) {
-  return (
-    <EventContainerStyled>
+function EventContainer({ events }) {
+  return events.length === 0 ? (
+    <NoEventsContainer>
+     <h2>Everything is probably alright</h2>
+    </NoEventsContainer>
+  ) :(
+    <div>
       <TABLE>
+        <tbody>
         <TR>
           <TH>Alertname</TH>
           <TH>Namespace</TH>
@@ -59,7 +66,7 @@ function EventContainer({ events}) {
           <TH>Triggered</TH>
         </TR>
         {events.map(event => (
-          <TR key={event.alertname} background={event.severity}>
+          <TR key={event.alertname + event.triggered} background={event.severity}>
             <TD>
               {event.alertname}
             </TD>
@@ -70,12 +77,13 @@ function EventContainer({ events}) {
               {event.message}
             </TD>
             <TD>
-              {event.triggered}
+              {new Date(event.triggered).toLocaleString()}
             </TD>
           </TR>
         ))}
+        </tbody>
       </TABLE>
-    </EventContainerStyled>
+    </div>
   )
 }
 

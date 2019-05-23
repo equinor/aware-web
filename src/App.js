@@ -19,7 +19,17 @@ function getMostSevereAlert(events) {
 const Header = styled.h1`
   margin: 0px;
   padding: 20px;
-  
+`;
+
+const AppContainer = styled.div`
+  background: ${props => props.backgroundColor};
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 class App extends React.Component {
@@ -74,8 +84,11 @@ class App extends React.Component {
 
   componentDidMount() {
     this.refetchData();
-    this.interval = setInterval(() => this.refetchData(), 15000);
+    this.interval = setInterval(() => this.refetchData(), 10000);
+  }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
@@ -86,10 +99,10 @@ class App extends React.Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <div style={{ background: backgroundColor, margin: '0px' }}>
+        <AppContainer backgroundColor={backgroundColor}>
           <Header>SDP AKS Production</Header>
           <EventContainer events={events}/>
-        </div>
+        </AppContainer>
       );
     }
   }
