@@ -1,7 +1,9 @@
 FROM node:11.14.0-alpine
+RUN npm install -g serve
 WORKDIR /code
-RUN npm install -g yarn
 COPY package.json /code/
-RUN yarn install
+RUN yarn --no-lockfile
 COPY ./ /code/
+RUN yarn build
+EXPOSE 3000
 CMD ["yarn", "start"]
