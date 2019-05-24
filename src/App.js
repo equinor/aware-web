@@ -5,15 +5,15 @@ import EventContainer from './EventContainer';
 function getMostSevereAlert(events) {
   let mostSever = 'ok';
   if (events.some(event => event.severity === 'none')) {
-    mostSever = 'none'
+    mostSever = 'none';
   }
   if (events.some(event => event.severity === 'warning')) {
-    mostSever = 'warning'
+    mostSever = 'warning';
   }
   if (events.some(event => event.severity === 'critical')) {
-    mostSever = 'critical'
+    mostSever = 'critical';
   }
-  return mostSever
+  return mostSever;
 }
 
 const Header = styled.h1`
@@ -43,10 +43,10 @@ class App extends React.Component {
   }
 
   refetchData() {
-    fetch("/api/prometheus")
+    fetch('/api/prometheus')
       .then(res => res.json())
       .then(
-        (result) => {
+        result => {
           let background;
           switch (getMostSevereAlert(result)) {
             case 'none':
@@ -67,19 +67,19 @@ class App extends React.Component {
           this.setState({
             isLoaded: true,
             events: result,
-            backgroundColor: background,
+            backgroundColor: background
           });
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        (error) => {
+        error => {
           this.setState({
             isLoaded: true,
             error
           });
         }
-      )
+      );
   }
 
   componentDidMount() {
@@ -100,8 +100,8 @@ class App extends React.Component {
     } else {
       return (
         <AppContainer backgroundColor={backgroundColor}>
-          <Header>SDP AKS Production</Header>
-          <EventContainer events={events}/>
+          <Header>SDP AKS Events</Header>
+          <EventContainer events={events} />
         </AppContainer>
       );
     }

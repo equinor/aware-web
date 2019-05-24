@@ -32,7 +32,6 @@ const TH = styled.th`
 const TABLE = styled.table`
   width: 90%;
   margin: auto;
-  overflow: hidden;
   border-collapse: collapse;
   border-spacing: 0;
 `;
@@ -53,38 +52,33 @@ const TD = styled.td`
 function EventContainer({ events }) {
   return events.length === 0 ? (
     <NoEventsContainer>
-     <h2>Everything is probably alright</h2>
+      <h2>Everything is probably alright</h2>
     </NoEventsContainer>
-  ) :(
-    <div>
+  ) : (
+    <div style={{ overflow: 'auto' }}>
       <TABLE>
         <tbody>
-        <TR>
-          <TH>Alertname</TH>
-          <TH>Namespace</TH>
-          <TH>Message</TH>
-          <TH>Triggered</TH>
-        </TR>
-        {events.map(event => (
-          <TR key={event.alertname + event.triggered} background={event.severity}>
-            <TD>
-              {event.alertname}
-            </TD>
-            <TD>
-              {event.namespace}
-            </TD>
-            <TD>
-              {event.message}
-            </TD>
-            <TD>
-              {new Date(event.triggered).toLocaleString()}
-            </TD>
+          <TR>
+            <TH>Alertname</TH>
+            <TH>Namespace</TH>
+            <TH>Message</TH>
+            <TH>Triggered</TH>
           </TR>
-        ))}
+          {events.map(event => (
+            <TR
+              key={event.alertname + event.triggered}
+              background={event.severity}
+            >
+              <TD>{event.alertname}</TD>
+              <TD>{event.namespace}</TD>
+              <TD>{event.message}</TD>
+              <TD>{new Date(event.triggered).toLocaleString()}</TD>
+            </TR>
+          ))}
         </tbody>
       </TABLE>
     </div>
-  )
+  );
 }
 
-export default EventContainer
+export default EventContainer;
