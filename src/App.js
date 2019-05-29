@@ -100,7 +100,7 @@ class App extends React.Component {
     } else {
       return (
         <AppContainer backgroundColor={backgroundColor}>
-          <Header>SDP AKS Events</Header>
+          <Header>{window.location.host}</Header>
           <EventContainer events={events} />
         </AppContainer>
       );
