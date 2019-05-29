@@ -67,7 +67,8 @@ class App extends React.Component {
           this.setState({
             isLoaded: true,
             events: result,
-            backgroundColor: background
+            backgroundColor: background,
+            error: null,
           });
         },
         // Note: it's important to handle errors here
