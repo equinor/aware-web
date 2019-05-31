@@ -66,7 +66,7 @@ function EventContainer({ events }) {
           </TR>
           {events.map(event => (
             <TR
-              key={event.alertname + event.triggered}
+              key={event.alertname + event.message}
               background={event.severity}
             >
               <TD>{event.alertname}</TD>

@@ -1,4 +1,4 @@
-FROM node:11.14.0-alpine
+FROM node:12-alpine
 RUN npm install -g serve
 WORKDIR /code
 COPY package.json /code/
