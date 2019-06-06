@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import EventContainer from './EventContainer';
+import axios from 'axios';
 
 function getMostSevereAlert(events) {
   let mostSever = 'ok';
@@ -16,6 +17,26 @@ function getMostSevereAlert(events) {
   return mostSever;
 }
 
+function getBackgroundColor(events) {
+  let background;
+  switch (getMostSevereAlert(events)) {
+    case 'none':
+      background = '#747474';
+      break;
+    case 'ok':
+      background = '#86C232';
+      break;
+    case 'warning':
+      background = '#FF652F';
+      break;
+    case 'critical':
+      background = '#FC4445';
+      break;
+    default:
+      background = 'white';
+  }
+  return background;
+}
 const Header = styled.h1`
   margin: 0px;
   padding: 20px;
@@ -32,6 +53,28 @@ const AppContainer = styled.div`
   align-items: center;
 `;
 
+const P = styled.p`
+  margin: 0px;
+`;
+function CouldNotFetch({ lastSuccessfulFetch }) {
+  let lastFetch;
+  if (lastSuccessfulFetch) {
+    const temp_string = lastSuccessfulFetch.toString();
+    lastFetch = temp_string
+      .split(' ')
+      .splice(0, 5)
+      .join(' ');
+  } else {
+    lastFetch = 'none';
+  }
+  return (
+    <>
+      <P>Could not fetch data</P>
+      <P>Last updated; {lastFetch}</P>
+    </>
+  );
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -43,44 +86,23 @@ class App extends React.Component {
   }
 
   refetchData() {
-    fetch('/api/prometheus')
-      .then(res => res.json())
-      .then(
-        result => {
-          let background;
-          switch (getMostSevereAlert(result)) {
-            case 'none':
-              background = '#747474';
-              break;
-            case 'ok':
-              background = '#86C232';
-              break;
-            case 'warning':
-              background = '#FF652F';
-              break;
-            case 'critical':
-              background = '#FC4445';
-              break;
-            default:
-              background = 'white';
-          }
-          this.setState({
-            isLoaded: true,
-            events: result,
-            backgroundColor: background,
-            error: null,
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
+    axios
+      .get('/api/prometheus')
+      .then(response => {
+        this.setState({
+          isLoaded: true,
+          events: response.data,
+          backgroundColor: getBackgroundColor(response.data),
+          lastSuccessfulFetch: new Date(),
+          error: null
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      });
   }
 
   componentDidMount() {
@@ -93,15 +115,20 @@ class App extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, events, backgroundColor } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    const {
+      error,
+      isLoaded,
+      events,
+      backgroundColor,
+      lastSuccessfulFetch
+    } = this.state;
+    if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
       return (
         <AppContainer backgroundColor={backgroundColor}>
           <Header>{window.location.host}</Header>
+          {error && <CouldNotFetch lastSuccessfulFetch={lastSuccessfulFetch} />}
           <EventContainer events={events} />
         </AppContainer>
       );
